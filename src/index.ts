@@ -1,16 +1,33 @@
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { HttpBindings, serve } from "@hono/node-server";
+import { Hono } from "hono";
+import { serveStatic } from "@hono/node-server/serve-static";
 
-const app = new Hono()
+type Bindings = HttpBindings;
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+const app = new Hono<{ Bindings: Bindings }>();
 
-const port = 3000
-console.log(`Server is running on port ${port}`)
+app.get("/", (c) => {
+  return c.json({
+    remoteAddress: c.env.incoming.socket.remoteAddress,
+  });
+});
+
+app.get("/api/hello", (c) => {
+  return c.json({ ok: true, message: "Hello Hono!" });
+});
+
+app.get(
+  "/static/*",
+  serveStatic({
+    root: "./",
+    rewriteRequestPath: (path) => path.replace(/^\/static/, "/statics"),
+  })
+);
+
+const port = 8787;
+console.log(`Server is running on port ${port}`);
 
 serve({
   fetch: app.fetch,
-  port
-})
+  port,
+});
