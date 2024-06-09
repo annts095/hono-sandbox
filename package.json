@@ -1,13 +1,18 @@
 {
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "init:dynamodb": "cross-env DYNAMODB_ENDPOINT=http://127.0.0.1:18000 DYNAMODB_ACCESS_KEY_ID=dummy DYNAMODB_SECRET_ACCESS_KEY=dummy ts-node ./scripts/initDB.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.592.0",
     "@hono/node-server": "^1.11.1",
-    "hono": "^4.3.5"
+    "cross-env": "^7.0.3",
+    "hono": "^4.3.5",
+    "typescript": "^5.4.5",
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.1"
   }
 }
